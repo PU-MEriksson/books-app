@@ -1,0 +1,11 @@
+# Local build output must never be copied into the image — it would shadow the
+# container's own build and can carry Mac-specific binaries into a Linux image.
+bin/
+obj/
+
+# Local development artefacts that have no place in a deployed image.
+*.db
+*.db-shm
+*.db-wal
+.DS_Store
+Properties/launchSettings.json

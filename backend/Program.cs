@@ -13,12 +13,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-else
-{
-    // Render terminates TLS at its edge and forwards plain HTTP to the
-    // container, so HTTPS redirection only belongs outside development.
-    app.UseHttpsRedirection();
-}
+
+// Deliberately no UseHttpsRedirection(): Render terminates TLS at its edge and
+// already redirects all HTTP traffic to HTTPS. Inside the container every
+// request arrives as plain HTTP, so the middleware would redirect to HTTPS,
+// come back through the proxy as HTTP again, and loop forever.
 
 app.UseAuthorization();
 

@@ -118,8 +118,14 @@ are hosted separately:
   runtime** (verified against their docs — the six native runtimes are Node/Bun,
   Python, Ruby, Go, Rust, Elixir). A two-stage `backend/Dockerfile` handles it.
   Root directory `backend`.
-- `UseHttpsRedirection()` is guarded to non-development only — Render terminates
-  TLS at its edge and forwards plain HTTP to the container.
+- ⚠️ **`UseHttpsRedirection()` is deliberately removed, not just guarded.**
+  Render terminates TLS at its edge and already redirects all HTTP to HTTPS, so
+  every request reaches the container as plain HTTP. Kestrel would see a
+  non-HTTPS request, redirect to HTTPS, get it back through the proxy as HTTP,
+  and **loop forever** — Microsoft documents this exact failure for any
+  non-IIS reverse proxy. Don't re-add it. (The alternative, if the app ever
+  needs to know the real scheme, is `UseForwardedHeaders` with
+  `X-Forwarded-Proto` configured *before* other middleware.)
 - ⚠️ **Render free tier has no persistent disk**, so the SQLite file resets on
   every deploy and cold start. Mitigation: run `db.Database.Migrate()` on startup
   and **seed** books and the 5 quotes when the tables are empty, so a reviewer
@@ -169,7 +175,8 @@ _Updated as I go._
 - ✅ Angular CLI 20 and `dotnet-ef` installed
 - ✅ Git repo initialised at project root (`main`), .NET `.gitignore` added
 - ✅ Backend scaffolded: `backend/Books.Api.csproj`, controllers template
-- ✅ `UseHttpsRedirection()` moved behind the non-development branch
+- ✅ `UseHttpsRedirection()` removed entirely (see Deployment notes — guarding it
+  to production would have caused a redirect loop on Render)
 - ✅ Frontend scaffolded into `frontend/` — **Angular 20.3**, verified
   (`zone.js` present, Karma/Jasmine). The first attempt produced Angular 21
   because the global CLI pin didn't take; re-scaffolded from CLI 20.3.37.
@@ -183,7 +190,11 @@ _Updated as I go._
 - ✅ `ng build` verified clean; output confirmed at `dist/frontend/browser`
 - ✅ First commit pushed to GitHub — but it contains the Angular 21 scaffold;
   the re-scaffold still needs committing
-- ⬜ `backend/Dockerfile` + `.dockerignore`
+- ✅ `backend/Dockerfile` + `.dockerignore` — two-stage build, verified locally:
+  image builds, `PORT` override honoured, `/weatherforecast` returns 200,
+  SIGTERM shuts down gracefully, startup logs clean. Local test command:
+  `docker build -t books-api ./backend && docker run --rm -e PORT=10000 -p 8081:10000 books-api`
+  (host port 8080 is occupied on this Mac — use 8081)
 - ⬜ Early deploy: Netlify (frontend) + Render (backend)
 - ⬜ CORS configured once the frontend URL exists
 - ⬜ Books CRUD → auth → My Quotes → dark mode
