@@ -170,9 +170,19 @@ _Updated as I go._
 - ✅ Git repo initialised at project root (`main`), .NET `.gitignore` added
 - ✅ Backend scaffolded: `backend/Books.Api.csproj`, controllers template
 - ✅ `UseHttpsRedirection()` moved behind the non-development branch
-- ✅ Frontend scaffolded into `frontend/`
-- ⬜ Bootstrap + Font Awesome installed and wired into `angular.json`
-- ⬜ First commit and push to GitHub
+- ✅ Frontend scaffolded into `frontend/` — **Angular 20.3**, verified
+  (`zone.js` present, Karma/Jasmine). The first attempt produced Angular 21
+  because the global CLI pin didn't take; re-scaffolded from CLI 20.3.37.
+  **Check `ng version` says 20.x before trusting any future scaffold.**
+- ✅ Bootstrap 5.3 + Font Awesome 7.3 installed and wired into `angular.json`
+  (`styles` + `scripts`); initial bundle budget raised to 1 MB warning / 2 MB
+  error to accommodate them — 648 kB raw, 132 kB transferred
+- ✅ `rootDir: "./src"` added to `tsconfig.app.json` / `tsconfig.spec.json` for
+  forward-compatibility with TypeScript 6 (an editor-level warning; the CLI
+  never emitted it)
+- ✅ `ng build` verified clean; output confirmed at `dist/frontend/browser`
+- ✅ First commit pushed to GitHub — but it contains the Angular 21 scaffold;
+  the re-scaffold still needs committing
 - ⬜ `backend/Dockerfile` + `.dockerignore`
 - ⬜ Early deploy: Netlify (frontend) + Render (backend)
 - ⬜ CORS configured once the frontend URL exists
