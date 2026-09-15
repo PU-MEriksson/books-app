@@ -103,6 +103,19 @@ section documenting that it was actually carried out:
   request (Render free-tier cold start). *This is our own caveat, not something
   the brief asks for.*
 
+## Live URLs
+
+- **Frontend:** https://friendly-centaur-f6b57a.netlify.app
+- **Backend:** https://books-api-a36f.onrender.com
+- **Repo:** https://github.com/PU-MEriksson/books-app
+
+⚠️ **Always verify the published link in a private/incognito window.** Netlify's
+new projects default to **Private** visitor access, which served an
+`app.netlify.com/edge-access` login page with HTTP 401 to everyone except the
+logged-in owner — invisible from a normal browser, and nothing in the deploy
+logs flags it. Fixed via *Project configuration → General → Visitor access →
+Project visibility → Public*. Re-check this after any Netlify settings change.
+
 ## Deployment notes
 
 All three hosts named in the brief (Netlify, Vercel, Azure Static Web Apps) are
@@ -197,6 +210,12 @@ _Updated as I go._
   SIGTERM shuts down gracefully, startup logs clean. Local test command:
   `docker build -t books-api ./backend && docker run --rm -e PORT=10000 -p 8081:10000 books-api`
   (host port 8080 is occupied on this Mac — use 8081)
-- ⬜ Early deploy: Netlify (frontend) + Render (backend)
-- ⬜ CORS configured once the frontend URL exists
+- ✅ `netlify.toml` committed at repo root (base `frontend`, publish
+  `dist/frontend/browser`, SPA rewrite)
+- ✅ **Early deploy done and verified anonymously:** frontend 200, deep link
+  `/books/edit/42` → 200 serving `<app-root>` (SPA rewrite works), backend
+  `/weatherforecast` → 200. Deployed asset hashes match the local build.
+- ⬜ Set a real `<title>` — currently the scaffold default "Frontend"
+- ⬜ CORS configured on the API for the Netlify origin
+- ⬜ API base URL wired into Angular environment config
 - ⬜ Books CRUD → auth → My Quotes → dark mode
