@@ -1,0 +1,12 @@
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist/frontend/browser"
+
+# Angular's router is client-side. Without this, opening /books directly makes
+# Netlify look for a file at that path and return 404. Status 200 serves
+# index.html while keeping the URL, so Angular's router takes over.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

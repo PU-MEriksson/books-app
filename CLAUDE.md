@@ -109,11 +109,13 @@ All three hosts named in the brief (Netlify, Vercel, Azure Static Web Apps) are
 **frontend-only** — none of them runs an ASP.NET Core Web API. So the two halves
 are hosted separately:
 
-- **Frontend → Netlify.** Base directory `frontend`, build `npm run build`,
-  publish `frontend/dist/frontend/browser` (Angular 17+ splits output into
-  `browser/`; older tutorials saying `dist/frontend` are wrong for v20).
-  Needs an SPA rewrite `/*` → `/index.html` (200), committed as
-  `frontend/netlify.toml` rather than clicked into the dashboard.
+- **Frontend → Netlify**, configured by a committed `netlify.toml` at the **repo
+  root** (not inside `frontend/`). Base `frontend`, command `npm run build`,
+  publish `dist/frontend/browser`.
+  ⚠️ **Every path in `netlify.toml` is relative to `base`**, so the publish path
+  is `dist/frontend/browser`, *not* `frontend/dist/frontend/browser`. Angular
+  17+ splits output into `browser/`; tutorials saying `dist/frontend` are wrong
+  for v20. Needs an SPA rewrite `/*` → `/index.html` status 200.
 - **Backend → Render as a Docker service.** Render has **no native .NET
   runtime** (verified against their docs — the six native runtimes are Node/Bun,
   Python, Ruby, Go, Rust, Elixir). A two-stage `backend/Dockerfile` handles it.
