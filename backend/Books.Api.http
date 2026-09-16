@@ -52,3 +52,12 @@ Content-Type: application/json
   "author": "Astrid Lindgren",
   "publicationDate": "1945-11-26"
 }
+
+### Delete book 3
+DELETE {{baseUrl}}/api/books/3
+
+### Delete book 4
+DELETE {{baseUrl}}/api/books/4
+
+### Delete a book that doesn't exist (should fail with 404)
+DELETE {{baseUrl}}/api/books/999
