@@ -1,6 +1,24 @@
-@Books.Api_HostAddress = http://localhost:5220
+@baseUrl = http://localhost:5220
 
-GET {{Books.Api_HostAddress}}/books/
+### Get all books
+GET {{baseUrl}}/api/books
 Accept: application/json
 
-###
+### Create a book
+POST {{baseUrl}}/api/books
+Content-Type: application/json
+
+{
+  "title": "The Hobbit",
+  "author": "J.R.R. Tolkien",
+  "publicationDate": "1937-09-21"
+}
+
+### Create a book WITHOUT a title (should fail with 400)
+POST {{baseUrl}}/api/books
+Content-Type: application/json
+
+{
+  "author": "Nobody",
+  "publicationDate": "2000-01-01"
+}
