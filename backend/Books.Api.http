@@ -1,6 +1,6 @@
 @Books.Api_HostAddress = http://localhost:5220
 
-GET {{Books.Api_HostAddress}}/weatherforecast/
+GET {{Books.Api_HostAddress}}/books/
 Accept: application/json
 
 ###
