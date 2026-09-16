@@ -22,3 +22,33 @@ Content-Type: application/json
   "author": "Nobody",
   "publicationDate": "2000-01-01"
 }
+
+### Update book 2 (fixes one of the broken books)
+PUT {{baseUrl}}/api/books/2
+Content-Type: application/json
+
+{
+  "title": "Pippi Longstocking",
+  "author": "Astrid Lindgren",
+  "publicationDate": "1945-11-26"
+}
+
+### Update a book that doesn't exist (should fail with 404)
+PUT {{baseUrl}}/api/books/999
+Content-Type: application/json
+
+{
+  "title": "Ghost book",
+  "author": "Nobody",
+  "publicationDate": "2000-01-01"
+}
+
+### Update with an EMPTY title (should fail with 400)
+PUT {{baseUrl}}/api/books/2
+Content-Type: application/json
+
+{
+  "title": "",
+  "author": "Astrid Lindgren",
+  "publicationDate": "1945-11-26"
+}
