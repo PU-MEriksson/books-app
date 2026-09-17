@@ -2,7 +2,7 @@
 
 ## Project
 
-Technical take-home assignment for an internship application, two-week deadline.
+Technical take-home assignment with a two-week deadline.
 A responsive CRUD web application with a Books view and a "My Quotes" view, JWT
 authentication, built with Angular 20 (frontend) and .NET 9 C# Web API (backend).
 
@@ -24,6 +24,11 @@ This means:
   unusual patterns.
 - If something is standard Angular/.NET practice I probably don't already know,
   say so explicitly rather than assuming I do.
+- **Explain as to a beginner, and go one small step at a time.** My knowledge is
+  broad but shallow (many frameworks during my education), so define terms the
+  first time they come up and don't assume earlier frameworks (e.g. Laravel)
+  are remembered. Give the next step, let me do it and test it, then move on —
+  no long multi-step roadmaps. This worked very well for the backend CRUD.
 
 ## Tech stack
 
@@ -100,8 +105,8 @@ section documenting that it was actually carried out:
   these are illustrative, not a closed list**.
 - Submit the **published link** plus **GitHub link(s)** to the repository.
 - Note in the submission that the API may take ~1 minute to respond on the first
-  request (Render free-tier cold start). *This is our own caveat, not something
-  the brief asks for.*
+  request (Render free-tier cold start). _This is our own caveat, not something
+  the brief asks for._
 
 ## Live URLs
 
@@ -113,8 +118,8 @@ section documenting that it was actually carried out:
 new projects default to **Private** visitor access, which served an
 `app.netlify.com/edge-access` login page with HTTP 401 to everyone except the
 logged-in owner — invisible from a normal browser, and nothing in the deploy
-logs flags it. Fixed via *Project configuration → General → Visitor access →
-Project visibility → Public*. Re-check this after any Netlify settings change.
+logs flags it. Fixed via _Project configuration → General → Visitor access →
+Project visibility → Public_. Re-check this after any Netlify settings change.
 
 ## Deployment notes
 
@@ -126,7 +131,7 @@ are hosted separately:
   root** (not inside `frontend/`). Base `frontend`, command `npm run build`,
   publish `dist/frontend/browser`.
   ⚠️ **Every path in `netlify.toml` is relative to `base`**, so the publish path
-  is `dist/frontend/browser`, *not* `frontend/dist/frontend/browser`. Angular
+  is `dist/frontend/browser`, _not_ `frontend/dist/frontend/browser`. Angular
   17+ splits output into `browser/`; tutorials saying `dist/frontend` are wrong
   for v20. Needs an SPA rewrite `/*` → `/index.html` status 200.
 - **Backend → Render as a Docker service.** Render has **no native .NET
@@ -140,7 +145,7 @@ are hosted separately:
   and **loop forever** — Microsoft documents this exact failure for any
   non-IIS reverse proxy. Don't re-add it. (The alternative, if the app ever
   needs to know the real scheme, is `UseForwardedHeaders` with
-  `X-Forwarded-Proto` configured *before* other middleware.)
+  `X-Forwarded-Proto` configured _before_ other middleware.)
 - ⚠️ **Render free tier has no persistent disk**, so the SQLite file resets on
   every deploy and cold start. Mitigation: run `db.Database.Migrate()` on startup
   and **seed** books and the 5 quotes when the tables are empty, so a reviewer
@@ -173,11 +178,30 @@ cd backend
 dotnet run                # http://localhost:5220
 dotnet build
 
-# EF Core migration
+# EF Core migration (the env var prefix is required on this Mac — see below)
 cd backend
-dotnet ef migrations add <Name>
-dotnet ef database update
+DOTNET_ROLL_FORWARD=LatestMajor dotnet ef migrations add <Name>
+DOTNET_ROLL_FORWARD=LatestMajor dotnet ef database update
 ```
+
+⚠️ **`dotnet ef` needs `DOTNET_ROLL_FORWARD=LatestMajor` on this Mac.** Several
+old .NET runtimes (6.0.26, 7.0.15, 8.0.0, 8.0.2) in `/usr/local/share/dotnet`
+are **Intel x64 builds** on an Apple Silicon machine. `dotnet-ef` targets
+net8.0, so without the prefix it picks the broken 8.0.2 and crashes with
+`incompatible architecture`. The app itself runs on 9.0.1 (arm64) and is
+unaffected. Permanent fix (not done yet): remove the x64 runtimes/SDKs.
+`dotnet-ef` is pinned to **9.0.20** to match the EF Core packages — `dotnet
+tool update` can't downgrade, so change versions with uninstall + install.
+The "tools directory is not on PATH" warning is a false alarm: PATH has it as
+`~/.dotnet/tools` and the check doesn't recognise the tilde form.
+
+**Testing the API:** `backend/Books.Api.http` with the VS Code **REST Client**
+extension. The variable is `@baseUrl` — the template's `Books.Api_HostAddress`
+was renamed because REST Client treats a dot as a request-variable reference
+("Books is not found").
+
+**Local database:** `backend/books.db` (git- and docker-ignored). Safe to
+delete — `Migrate()` + the seeder recreate it on the next `dotnet run`.
 
 The API serves no route at `/` — it's a JSON API, so "is it alive?" means
 hitting an endpoint. .NET 9's template ships **no Swagger UI**; `AddOpenApi()`
@@ -203,8 +227,7 @@ _Updated as I go._
   forward-compatibility with TypeScript 6 (an editor-level warning; the CLI
   never emitted it)
 - ✅ `ng build` verified clean; output confirmed at `dist/frontend/browser`
-- ✅ First commit pushed to GitHub — but it contains the Angular 21 scaffold;
-  the re-scaffold still needs committing
+- ✅ Pushed to GitHub, including the Angular 20 re-scaffold (`f165dac`)
 - ✅ `backend/Dockerfile` + `.dockerignore` — two-stage build, verified locally:
   image builds, `PORT` override honoured, `/weatherforecast` returns 200,
   SIGTERM shuts down gracefully, startup logs clean. Local test command:
@@ -215,7 +238,45 @@ _Updated as I go._
 - ✅ **Early deploy done and verified anonymously:** frontend 200, deep link
   `/books/edit/42` → 200 serving `<app-root>` (SPA rewrite works), backend
   `/weatherforecast` → 200. Deployed asset hashes match the local build.
+- ✅ **Auto-deploy confirmed on both hosts** — pushing to `main` redeploys
+  Netlify and Render (Render's Docker build takes several minutes).
+
+### Backend Books CRUD — ✅ done (2026-09-16), tested locally and live
+
+- ✅ EF Core **9.0.20** packages: `Microsoft.EntityFrameworkCore.Sqlite` +
+  `.Design` (pinned to 9.x to match .NET 9)
+- ✅ `Models/Book.cs` — `Id`, `Title`, `Author`, `PublicationDate`.
+  `[Required]` on all three; `PublicationDate` is **`DateOnly?`** so a missing
+  date is rejected instead of silently becoming `0001-01-01`. Nullable
+  reference types alone did **not** reject a missing/empty title — the explicit
+  `[Required]` is what does. JSON dates are `"yyyy-MM-dd"` (fits
+  `<input type="date">`).
+- ✅ `Data/AppDbContext.cs` (`DbSet<Book> Books => Set<Book>()`), registered in
+  `Program.cs` via `AddDbContext` + `UseSqlite`; connection string
+  `DefaultConnection` = `Data Source=books.db` in `appsettings.json`
+- ✅ Migration `InitialCreate`
+- ✅ `Controllers/BooksController.cs` at **`/api/books`**:
+  - `GET /api/books` → 200 list
+  - `GET /api/books/{id}` → 200 / 404
+  - `POST /api/books` → 201 Created (+ `Location`) / 400 on validation
+  - `PUT /api/books/{id}` → 204 / 404 / 400 — body needs no `id`; the URL id
+    decides, values are copied onto the tracked entity
+  - `DELETE /api/books/{id}` → 204 / 404
+- ✅ **Startup migration + seeding** in `Program.cs`: a manual scope runs
+  `db.Database.Migrate()` then `DbSeeder.Seed(db)` (`Data/DbSeeder.cs`, 5 books,
+  only when the table is empty). Solves Render's non-persistent disk.
+  Verified live: https://books-api-a36f.onrender.com/api/books returns the 5
+  seeded books.
+- `WeatherForecastController` + `WeatherForecast.cs` are still the template
+  leftovers — remove when convenient.
+- `[Authorize]` intentionally **not** added yet (comes with the auth step).
+
+### Next up (planned for 2026-09-17): frontend Books — list, edit, delete
+
+- ⬜ API base URL in Angular environment config (local `http://localhost:5220`
+  vs Render URL)
+- ⬜ **CORS on the API** — needed before Angular can call it, both from
+  `http://localhost:4200` locally and from the Netlify origin
+- ⬜ Books list on the home page, Edit form, Delete button (then "Add new book")
 - ⬜ Set a real `<title>` — currently the scaffold default "Frontend"
-- ⬜ CORS configured on the API for the Netlify origin
-- ⬜ API base URL wired into Angular environment config
-- ⬜ Books CRUD → auth → My Quotes → dark mode
+- ⬜ Then: auth → My Quotes (seed the 5 quotes in `DbSeeder`) → dark mode
