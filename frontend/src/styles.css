@@ -1,1 +1,142 @@
-/* You can add global styles to this file, and also import other style files */
+/* =====================================================================
+   1. PALETTE — the only place with actual color values.
+   To change a color, change it here. Everything below reads these.
+
+   Some colors are also written as "r, g, b" (the -rgb variables),
+   because a few Bootstrap features need that format to add
+   transparency, e.g. the glow around a focused button.
+   ===================================================================== */
+
+[data-bs-theme='light'] {
+  --app-bg: #f6f1e7; /* warm parchment */
+  --app-bg-rgb: 246, 241, 231;
+  --app-surface: #fffdf9; /* cards */
+  --app-text: #221f1b;
+  --app-text-rgb: 34, 31, 27;
+  --app-text-muted: #6b6459;
+  --app-text-muted-rgb: 107, 100, 89;
+  --app-border: #e4dccb;
+  --app-accent: #b6532e; /* terracotta */
+  --app-accent-rgb: 182, 83, 46;
+  --app-danger: #a13b2d;
+  --app-danger-rgb: 161, 59, 45;
+  --app-on-color: #ffffff; /* text on accent/danger backgrounds */
+}
+
+[data-bs-theme='dark'] {
+  --app-bg: #1c1917;
+  --app-bg-rgb: 28, 25, 23;
+  --app-surface: #2a2620;
+  --app-text: #ede7dc;
+  --app-text-rgb: 237, 231, 220;
+  --app-text-muted: #a69c8d;
+  --app-text-muted-rgb: 166, 156, 141;
+  --app-border: #3a342e;
+  --app-accent: #d98a5f;
+  --app-accent-rgb: 217, 138, 95;
+  --app-danger: #e08876;
+  --app-danger-rgb: 224, 136, 118;
+  --app-on-color: #1c1917;
+}
+
+/* =====================================================================
+   2. BOOTSTRAP'S GLOBAL VARIABLES → the palette.
+   These are defined on the <html> element, so they can be set directly.
+   [data-bs-theme] matches both themes; the values follow whichever
+   theme is active.
+   ===================================================================== */
+
+[data-bs-theme] {
+  --bs-body-bg: var(--app-bg);
+  --bs-body-bg-rgb: var(--app-bg-rgb);
+  --bs-body-color: var(--app-text);
+  --bs-body-color-rgb: var(--app-text-rgb);
+  --bs-secondary-color: var(--app-text-muted); /* .text-body-secondary */
+  --bs-secondary-color-rgb: var(--app-text-muted-rgb);
+  --bs-border-color: var(--app-border);
+  --bs-border-color-translucent: var(--app-border);
+
+  --bs-primary: var(--app-accent);
+  --bs-primary-rgb: var(--app-accent-rgb);
+  --bs-danger: var(--app-danger);
+  --bs-danger-rgb: var(--app-danger-rgb);
+
+  --bs-link-color: var(--app-accent);
+  --bs-link-color-rgb: var(--app-accent-rgb);
+  --bs-link-hover-color: var(--app-accent);
+  --bs-link-hover-color-rgb: var(--app-accent-rgb);
+
+  --bs-focus-ring-color: rgba(var(--app-accent-rgb), 0.25);
+}
+
+/* =====================================================================
+   3. COMPONENTS WITH THEIR OWN VARIABLES.
+   Bootstrap defines these on the component class itself (e.g. .card),
+   which overrides anything set on <html>. So they have to be set here,
+   on the same class.
+   ===================================================================== */
+
+.card {
+  --bs-card-bg: var(--app-surface);
+}
+
+/* --- Buttons ---
+   Bootstrap's button colors are fixed values, not linked to --bs-primary.
+   Step 1: pick which palette color each button type uses. */
+
+.btn-primary,
+.btn-outline-primary {
+  --app-btn: var(--app-accent);
+  --app-btn-rgb: var(--app-accent-rgb);
+}
+
+.btn-danger,
+.btn-outline-danger {
+  --app-btn: var(--app-danger);
+  --app-btn-rgb: var(--app-danger-rgb);
+}
+
+.btn-secondary,
+.btn-outline-secondary {
+  --app-btn: var(--app-text-muted);
+  --app-btn-rgb: var(--app-text-muted-rgb);
+}
+
+/* Step 2: shared rules. The hover color is the button color mixed
+   with 15% black, so no extra hover colors are needed in the palette. */
+
+.btn-primary,
+.btn-danger,
+.btn-secondary {
+  --app-btn-hover: color-mix(in srgb, var(--app-btn) 85%, black);
+
+  --bs-btn-color: var(--app-on-color);
+  --bs-btn-bg: var(--app-btn);
+  --bs-btn-border-color: var(--app-btn);
+  --bs-btn-hover-color: var(--app-on-color);
+  --bs-btn-hover-bg: var(--app-btn-hover);
+  --bs-btn-hover-border-color: var(--app-btn-hover);
+  --bs-btn-active-color: var(--app-on-color);
+  --bs-btn-active-bg: var(--app-btn-hover);
+  --bs-btn-active-border-color: var(--app-btn-hover);
+  --bs-btn-disabled-color: var(--app-on-color);
+  --bs-btn-disabled-bg: var(--app-btn);
+  --bs-btn-disabled-border-color: var(--app-btn);
+  --bs-btn-focus-shadow-rgb: var(--app-btn-rgb);
+}
+
+.btn-outline-primary,
+.btn-outline-danger,
+.btn-outline-secondary {
+  --bs-btn-color: var(--app-btn);
+  --bs-btn-border-color: var(--app-btn);
+  --bs-btn-hover-color: var(--app-on-color);
+  --bs-btn-hover-bg: var(--app-btn);
+  --bs-btn-hover-border-color: var(--app-btn);
+  --bs-btn-active-color: var(--app-on-color);
+  --bs-btn-active-bg: var(--app-btn);
+  --bs-btn-active-border-color: var(--app-btn);
+  --bs-btn-disabled-color: var(--app-btn);
+  --bs-btn-disabled-border-color: var(--app-btn);
+  --bs-btn-focus-shadow-rgb: var(--app-btn-rgb);
+}
