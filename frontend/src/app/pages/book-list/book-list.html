@@ -1,0 +1,9 @@
+<h1>Books</h1>
+
+<ul>
+  @for (book of books(); track book.id) {
+    <li>{{ book.title }} — {{ book.author }} ({{ book.publicationDate }})</li>
+  } @empty {
+    <li>No books yet.</li>
+  }
+</ul>
