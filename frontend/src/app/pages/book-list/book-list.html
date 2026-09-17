@@ -3,12 +3,15 @@
     <h1>Mina böcker</h1>
     <p class="text-body-secondary">{{ books().length }} böcker i din bokhylla</p>
   </header>
-  <button type="button" class="btn btn-primary">Lägg till bok</button>
+  <button type="button" class="btn btn-primary">
+    <i class="fa-solid fa-plus"></i>
+    Lägg till bok
+  </button>
 </div>
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
   @for (book of books(); track book.id) {
-    <app-book-card [book]="book" />
+    <app-book-card [book]="book" (delete)="deleteBook($event)" />
   } @empty {
     <p>No books yet</p>
   }

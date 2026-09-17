@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Book } from '../../models/book';
 
 @Component({
@@ -9,4 +9,5 @@ import { Book } from '../../models/book';
 })
 export class BookCard {
   book = input.required<Book>();
+  delete = output<Book>();
 }

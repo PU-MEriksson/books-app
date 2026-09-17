@@ -12,4 +12,12 @@ export class BookService {
   getAll(): Observable<Book[]> {
     return this.http.get<Book[]>(this.url);
   }
+  // create
+
+  // update
+
+  // delete
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${id}`);
+  }
 }
