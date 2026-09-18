@@ -270,18 +270,98 @@ _Updated as I go._
   leftovers — remove when convenient.
 - `[Authorize]` intentionally **not** added yet (comes with the auth step).
 
-### Next up: frontend Books — list, edit, delete
+### Frontend Books CRUD — ✅ done (2026-09-18), `ng build` clean
 
 - ✅ API base URL in Angular environment config (local `http://localhost:5220`
   vs Render URL)
 - ✅ **CORS on the API** — needed before Angular can call it, both from
   `http://localhost:4200` locally and from the Netlify origin
-- ✅ Set a real `<title>` — currently the scaffold default "Frontend"
-- ✅ List books on home page
-- ✅ Add delete functionality
-- ⬜ Add form and create functionality
-- ⬜ Change date format to only show publication year
-- ⬜ Add update functionality
-- ⬜ Improve styling
+- ✅ Set a real `<title>` — was the scaffold default "Frontend"
+- ✅ List books on home page (`pages/book-list` + `components/book-card`)
+- ✅ Delete, with `confirm()` and an `alert()` on failure
+- ✅ Create **and** update — **one** `pages/book-form` component serves both
+- ✅ `BookService` complete: `getAll`, `getById`, `create`, `update`, `delete`
 
-- ⬜ Then: auth → My Quotes (seed the 5 quotes in `DbSeeder`) → dark mode
+**How the shared create/edit form works** (the non-obvious parts):
+
+- Two routes, one component: `books/new` and `books/edit/:id` both map to
+  `BookForm`. Mode is decided by
+  `route.snapshot.paramMap.get('id')` — `null` means create. `snapshot` is safe
+  **only because** navigation always goes via the list, so the component is
+  destroyed and rebuilt between books. Going `/books/edit/1` → `/books/edit/2`
+  directly would reuse the instance and leave the snapshot stale; that would
+  need the `route.paramMap` observable instead.
+- **Reactive forms**, not template-driven — required by
+  `frontend/.claude/CLAUDE.md`. `fb.nonNullable.group()` so values are typed
+  `string` rather than `string | null` and `reset()` returns to `''`.
+- `patchValue(book)`, **not** `setValue` — `Book` has an `id`, the form has no
+  `id` control, and `setValue` throws on any mismatch.
+- `onSubmit` picks `update(...)` or `create(...)` into an
+  `Observable<unknown>` variable and subscribes **once**, so success/error
+  handling isn't duplicated. The annotation avoids TS reconciling
+  `Observable<void>` with `Observable<Book>`.
+- `DateOnly` on the API → `"yyyy-MM-dd"` → exactly what `<input type="date">`
+  wants. **No date conversion anywhere** — don't introduce one.
+- Cancel is an `<a routerLink="/">`, not a button: navigating destroys the
+  component, so there is nothing to reset.
+
+⚠️ **Angular gotchas hit today — worth not re-learning:**
+
+- `imports: []` in `@Component` is for **template dependencies only**
+  (components/directives/pipes). Putting the `Router` **service** there is
+  error `NG2012` and the component stops compiling entirely. Services come via
+  `inject()` and belong in no array. Rule: *in the HTML → `imports`; injected in
+  the class → not.*
+- `(ngSubmit)` goes on the `<form>`; a `<button type="submit">` triggers it
+  natively. Adding `(click)="onSubmit()"` as well would POST **twice**.
+- `[disabled]="form.invalid"` — without the brackets it sets the literal string
+  `"form.invalid"`, and the button is disabled forever.
+- Dynamic links need the array form: `[routerLink]="['/books/edit', book().id]"`.
+- Field initialisers run **top to bottom**, so `inject()`ed fields must be
+  declared above any field that uses them.
+- ⚠️ When something silently doesn't work, **read the `ng serve` output first** —
+  NG2012 was a hard build error sitting in the terminal the whole time.
+
+**Styling note:** `.form-control` hardcodes
+`background-color: var(--bs-body-bg)` — Bootstrap gives it **no** component
+variable like `.card`'s `--bs-card-bg`, so the palette override in `styles.css`
+has to set the property itself, and must repeat it for `.form-control:focus`
+(Bootstrap re-declares it there). Same story for the focus ring: form controls
+ignore `--bs-focus-ring-color` and hardcode Bootstrap blue.
+
+### Next up: authentication (starting Monday 2026-09-22)
+
+The unfamiliar part of the assignment — previous auth experience is Supabase
+only, so JWT issuing/validation by hand is all new. Take it slowly, one step at
+a time, and define the terms (claims, signing key, bearer token, hashing).
+
+Rough order: backend `User` model + registration/login endpoints → JWT issuing
+→ `[Authorize]` on `BooksController` → Angular login/register pages → token
+storage → an HTTP interceptor attaching the token → route guards.
+
+### Backend hardening — known gaps, deliberately deferred
+
+- ⬜ **`POST /api/books` binds straight to the `Book` entity, `Id` included**, so
+  a client can choose the id (EF Core honours an explicit key) and a repeat id
+  gives a 500 instead of a 400. Fix with a **DTO** — a request class holding only
+  `Title`, `Author`, `PublicationDate`. Becomes non-optional at the auth step:
+  returning the `User` entity would leak the password hash.
+- ⬜ **No length limits** — `[StringLength(200)]` on `Title` and `Author`.
+- ✅ Already safe: EF Core parameterises all SQL; `[ApiController]` auto-returns
+  400 from the `[Required]` attributes before the action runs; Angular escapes
+  interpolation, so `<script>` in a title is inert.
+- Note: `[Required]` **trims**, so `"   "` is rejected server-side — but
+  Angular's `Validators.required` does **not**, so a spaces-only title passes the
+  client and comes back a 400.
+
+### Remaining after auth
+
+- ⬜ Show only the publication **year** on the book cards
+- ⬜ Improve styling — incl. per-field validation messages
+  (`is-invalid` + `.invalid-feedback`, shown on `invalid && touched`); a
+  disabled submit button alone doesn't say *which* field is missing
+- ⬜ Replace `confirm()`/`alert()` with Bootstrap modals and toasts
+- ⬜ My Quotes (seed the 5 quotes in `DbSeeder`)
+- ⬜ Dark-mode toggle (palette already themed via `[data-bs-theme]`)
+- ⬜ Responsive testing pass + README section documenting it
+- ⬜ Remove the `WeatherForecast` template leftovers
