@@ -12,7 +12,10 @@ export class BookService {
   getAll(): Observable<Book[]> {
     return this.http.get<Book[]>(this.url);
   }
-  // create
+
+  create(book: Omit<Book, 'id'>): Observable<Book> {
+    return this.http.post<Book>(this.url, book);
+  }
 
   // update
 
