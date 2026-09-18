@@ -80,6 +80,16 @@
   --bs-card-bg: var(--app-surface);
 }
 
+.form-control {
+  background-color: var(--app-surface);
+}
+
+.form-control:focus {
+  background-color: var(--app-surface);
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 0.25rem rgba(var(--app-accent-rgb), 0.25);
+}
+
 /* --- Buttons ---
    Bootstrap's button colors are fixed values, not linked to --bs-primary.
    Step 1: pick which palette color each button type uses. */

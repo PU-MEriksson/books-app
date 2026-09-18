@@ -135,8 +135,7 @@ are hosted separately:
   17+ splits output into `browser/`; tutorials saying `dist/frontend` are wrong
   for v20. Needs an SPA rewrite `/*` → `/index.html` status 200.
 - **Backend → Render as a Docker service.** Render has **no native .NET
-  runtime** (verified against their docs — the six native runtimes are Node/Bun,
-  Python, Ruby, Go, Rust, Elixir). A two-stage `backend/Dockerfile` handles it.
+  runtime** (verified against their docs). A two-stage `backend/Dockerfile` handles it.
   Root directory `backend`.
 - ⚠️ **`UseHttpsRedirection()` is deliberately removed, not just guarded.**
   Render terminates TLS at its edge and already redirects all HTTP to HTTPS, so
@@ -271,12 +270,18 @@ _Updated as I go._
   leftovers — remove when convenient.
 - `[Authorize]` intentionally **not** added yet (comes with the auth step).
 
-### Next up (planned for 2026-09-17): frontend Books — list, edit, delete
+### Next up: frontend Books — list, edit, delete
 
-- ⬜ API base URL in Angular environment config (local `http://localhost:5220`
+- ✅ API base URL in Angular environment config (local `http://localhost:5220`
   vs Render URL)
-- ⬜ **CORS on the API** — needed before Angular can call it, both from
+- ✅ **CORS on the API** — needed before Angular can call it, both from
   `http://localhost:4200` locally and from the Netlify origin
-- ⬜ Books list on the home page, Edit form, Delete button (then "Add new book")
-- ⬜ Set a real `<title>` — currently the scaffold default "Frontend"
+- ✅ Set a real `<title>` — currently the scaffold default "Frontend"
+- ✅ List books on home page
+- ✅ Add delete functionality
+- ⬜ Add form and create functionality
+- ⬜ Change date format to only show publication year
+- ⬜ Add update functionality
+- ⬜ Improve styling
+
 - ⬜ Then: auth → My Quotes (seed the 5 quotes in `DbSeeder`) → dark mode
