@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { BookService } from '../../services/book-service';
 
 @Component({
   selector: 'app-book-form',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './book-form.html',
   styleUrl: './book-form.css',
 })
@@ -20,8 +20,6 @@ export class BookForm {
     publicationDate: ['', Validators.required],
   });
 
-  // Add cancel function that empty the form values and redirects back to the book list
-  // Add submit function
   protected onSubmit() {
     if (this.form.invalid) {
       return;
@@ -32,6 +30,4 @@ export class BookForm {
       error: () => alert('Kunde inte spara boken. Försök igen.'),
     });
   }
-
-  //Disable submit button if the form values are empty
 }
