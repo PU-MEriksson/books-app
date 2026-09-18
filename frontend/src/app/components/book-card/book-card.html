@@ -4,10 +4,10 @@
     <p class="card-text text-body-secondary">{{ book().author }}</p>
     <p class="card-text text-body-secondary">{{ book().publicationDate }}</p>
     <div class="d-flex gap-2">
-      <button type="button" class="btn btn-outline-secondary">
+      <a [routerLink]="['/books/edit', book().id]" class="btn btn-outline-secondary">
         <i class="fa-solid fa-pen"></i>
         Redigera
-      </button>
+      </a>
       <button type="button" class="btn btn-outline-danger" (click)="delete.emit(book())">
         <i class="fa-solid fa-trash-can"></i>
         Radera

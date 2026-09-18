@@ -13,11 +13,18 @@ export class BookService {
     return this.http.get<Book[]>(this.url);
   }
 
+  getById(id: number): Observable<Book> {
+    return this.http.get<Book>(`${this.url}/${id}`);
+  }
+
   create(book: Omit<Book, 'id'>): Observable<Book> {
     return this.http.post<Book>(this.url, book);
   }
 
   // update
+  update(id: number, book: Omit<Book, 'id'>): Observable<void> {
+    return this.http.put<void>(`${this.url}/${id}`, book);
+  }
 
   // delete
   delete(id: number): Observable<void> {

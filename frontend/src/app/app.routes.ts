@@ -5,4 +5,5 @@ import { BookForm } from './pages/book-form/book-form';
 export const routes: Routes = [
   { path: '', component: BookList },
   { path: 'books/new', component: BookForm },
+  { path: 'books/edit/:id', component: BookForm },
 ];
