@@ -1,10 +1,12 @@
 using Books.Api.Data;
 using Books.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Books.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
@@ -42,7 +44,7 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<Book>> CreateBook(Book book)
     {
         _context.Books.Add(book);
-        await _context.SaveChangesAsync();          
+        await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
     }

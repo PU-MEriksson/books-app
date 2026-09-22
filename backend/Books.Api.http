@@ -7,12 +7,14 @@ Accept: application/json
 ### Create a book
 POST {{baseUrl}}/api/books
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
-  "title": "The Hobbit",
-  "author": "J.R.R. Tolkien",
+  "title": "Boknamn",
+  "author": "Författare",
   "publicationDate": "1937-09-21"
 }
+
 
 ### Create a book WITHOUT a title (should fail with 400)
 POST {{baseUrl}}/api/books
@@ -43,6 +45,7 @@ Content-Type: application/json
   "publicationDate": "2000-01-01"
 }
 
+
 ### Update with an EMPTY title (should fail with 400)
 PUT {{baseUrl}}/api/books/2
 Content-Type: application/json
@@ -58,6 +61,7 @@ DELETE {{baseUrl}}/api/books/3
 
 ### Delete book 4
 DELETE {{baseUrl}}/api/books/4
+Authorization: Bearer {{login.response.body.token}}
 
 ### Delete a book that doesn't exist (should fail with 404)
 DELETE {{baseUrl}}/api/books/999
@@ -72,10 +76,15 @@ Content-Type: application/json
 }
 
 ### Log in
+# @name login
 POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "Mattias",
-  "password": "abc123"
+  "username": "Malin",
+  "password": "secret123"
 }
+
+### Get books WITH token
+GET {{baseUrl}}/api/books
+Authorization: Bearer {{login.response.body.token}}
