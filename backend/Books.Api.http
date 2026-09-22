@@ -67,6 +67,15 @@ POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "Malin",
-  "password": "abc"
+  "username": "Mattias",
+  "password": "abc123"
+}
+
+### Log in
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "Mattias",
+  "password": "abc123"
 }
