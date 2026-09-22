@@ -61,3 +61,12 @@ DELETE {{baseUrl}}/api/books/4
 
 ### Delete a book that doesn't exist (should fail with 404)
 DELETE {{baseUrl}}/api/books/999
+
+### Register a user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "Malin",
+  "password": "abc"
+}
