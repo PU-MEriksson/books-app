@@ -1,3 +1,42 @@
+<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/"> <i class="fa-solid fa-book me-2"></i>Bokhyllan </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mainNav"
+      aria-controls="mainNav"
+      aria-expanded="false"
+      aria-label="Växla navigering"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            Böcker
+          </a>
+        </li>
+      </ul>
+
+      @if (isLoggedIn()) {
+        <button class="btn btn-outline-secondary" (click)="onLogOut()">
+          <i class="fa-solid fa-right-from-bracket me-2"></i>Logga ut
+        </button>
+      }
+    </div>
+  </div>
+</nav>
+
 <main class="container py-4">
   <router-outlet />
 </main>
