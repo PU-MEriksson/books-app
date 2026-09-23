@@ -1,5 +1,5 @@
-<div class="login-page">
-  <h1 class="mb-4">Logga in</h1>
+<div class="register-page">
+  <h1 class="mb-4"><i class="fa-solid fa-user-plus me-2"></i>Skapa konto</h1>
 
   @if (errorMessage()) {
     <div class="alert alert-danger" role="alert">
@@ -8,7 +8,7 @@
   }
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div>
+    <div class="mb-4">
       <label for="username" class="form-label">Användarnamn</label>
       <input
         type="text"
@@ -17,22 +17,23 @@
         id="username"
         autocomplete="username"
       />
+      <div class="form-text">Minst 3 tecken.</div>
     </div>
-    <div>
-      <label for="passord" class="form-label">Lösenord</label>
+    <div class="mb-4">
+      <label for="password" class="form-label">Lösenord</label>
       <input
         type="password"
         class="form-control"
         formControlName="password"
         id="password"
-        autocomplete="current-password"
+        autocomplete="new-password"
       />
+      <div class="form-text">Minst 6 tecken.</div>
     </div>
-
-    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-      <i class="fa-solid fa-right-to-bracket me-2"> </i>
-      Logga in
+    <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">
+      Skapa konto
     </button>
   </form>
-  <p class="mt-4 text-center">Har du inget konto? <a routerLink="/register">Skapa ett</a></p>
+
+  <p class="mt-4 text-center">Har du redan ett konto? <a routerLink="/login">Logga in</a></p>
 </div>

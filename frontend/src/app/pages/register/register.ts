@@ -1,16 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [ReactiveFormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './register.html',
+  styleUrl: './register.css',
 })
-export class Login {
+export class Register {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -18,8 +18,8 @@ export class Login {
   protected errorMessage = signal<string | null>(null);
 
   protected form = this.fb.nonNullable.group({
-    username: ['', Validators.required],
-    password: ['', Validators.required],
+    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
   });
 
   protected onSubmit() {
@@ -29,13 +29,13 @@ export class Login {
 
     this.errorMessage.set(null);
 
-    this.authService.login(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(['/']),
+    this.authService.register(this.form.getRawValue()).subscribe({
+      next: () => this.router.navigate(['/login']),
       error: (error: HttpErrorResponse) =>
         this.errorMessage.set(
-          error.status === 401
-            ? 'Fel användarnamn eller lösenord.'
-            : 'Något gick fel. Försök igen om en stund',
+          error.status === 409
+            ? 'Användarnamnet är upptaget. Välj ett annat.'
+            : 'Kunde inte skapa kontot. Försök igen om en stund.',
         ),
     });
   }
