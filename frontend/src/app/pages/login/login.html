@@ -1,0 +1,36 @@
+<div class="login-page">
+  <h1 class="mb-4">Logga in</h1>
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>{{ errorMessage() }}
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username" class="form-label">Användarnamn</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="username"
+        id="username"
+        autocomplete="username"
+      />
+    </div>
+    <div>
+      <label for="passord" class="form-label">Lösenord</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+        id="password"
+        autocomplete="current-password"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+      <i class="fa-solid fa-right-to-bracket me-2"> </i>
+      Logga in
+    </button>
+  </form>
+</div>
