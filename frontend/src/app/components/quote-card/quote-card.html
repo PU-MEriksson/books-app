@@ -2,5 +2,11 @@
   <div class="card-body">
     <h5 class="card-text">{{ quote().text }}</h5>
     <p class="card-text">— {{ quote().author ?? 'Unknown' }}</p>
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-outline-danger" (click)="delete.emit(quote())">
+        <i class="fa-solid fa-trash-can"></i>
+        Radera
+      </button>
+    </div>
   </div>
 </div>

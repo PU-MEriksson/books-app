@@ -17,4 +17,16 @@ export class QuotesList implements OnInit {
   ngOnInit() {
     this.quoteService.getAll().subscribe((quotes) => this.quotes.set(quotes));
   }
+
+  deleteQuote(quote: Quote) {
+    // TODO: Add bootstrap component for confirmation
+    if (!confirm('Vill du radera citatet?')) {
+      return;
+    }
+
+    this.quoteService.delete(quote.id).subscribe({
+      next: () => this.quotes.update((quotes) => quotes.filter((q) => q.id !== quote.id)),
+      error: () => alert('Kunde inte radera citatet. Försök igen'),
+    });
+  }
 }
