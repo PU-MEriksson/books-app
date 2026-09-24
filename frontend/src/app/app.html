@@ -1,9 +1,11 @@
-<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom">
+<nav class="navbar navbar-expand-md border-bottom">
   <div class="container">
-    <a class="navbar-brand" routerLink="/"> <i class="fa-solid fa-book me-2"></i>Bokhyllan </a>
+    <a class="navbar-brand" routerLink="/">
+      <i class="fa-solid fa-book-open me-2 text-primary"></i>Bokhyllan
+    </a>
 
     <button
-      class="navbar-toggler"
+      class="navbar-toggler order-first me-2"
       type="button"
       data-bs-toggle="collapse"
       data-bs-target="#mainNav"
@@ -15,7 +17,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto nav-underline">
         <li class="nav-item">
           <a
             class="nav-link"
@@ -39,9 +41,13 @@
       </ul>
 
       @if (isLoggedIn()) {
-        <button class="btn btn-outline-secondary" (click)="onLogOut()">
-          <i class="fa-solid fa-right-from-bracket me-2"></i>Logga ut
-        </button>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button type="button" class="nav-link" (click)="onLogOut()">
+              <i class="fa-solid fa-right-from-bracket me-2"></i>Logga ut
+            </button>
+          </li>
+        </ul>
       }
     </div>
   </div>

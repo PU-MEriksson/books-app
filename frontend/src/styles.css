@@ -70,11 +70,53 @@
 }
 
 /* =====================================================================
+   FONTS — loaded from Google Fonts in index.html.
+   Work Sans for body text, Newsreader for headings. Bootstrap has no
+   CSS variable for heading fonts, so the headings are set directly.
+   ===================================================================== */
+
+:root {
+  --app-font-body: 'Work Sans', system-ui, sans-serif;
+  --app-font-heading: 'Newsreader', Georgia, serif;
+  --bs-body-font-family: var(--app-font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: var(--app-font-heading);
+  font-weight: 600;
+}
+
+/* =====================================================================
    3. COMPONENTS WITH THEIR OWN VARIABLES.
    Bootstrap defines these on the component class itself (e.g. .card),
    which overrides anything set on <html>. So they have to be set here,
    on the same class.
    ===================================================================== */
+.nav-underline .nav-link.active {
+  border-bottom-color: var(--app-accent);
+}
+
+/* No underline below md, where the menu collapses (navbar-expand-md) */
+@media (max-width: 767.98px) {
+  .nav-underline {
+    gap: 0;
+  }
+
+  .nav-underline .nav-link {
+    border-bottom: 0;
+  }
+}
 
 .card {
   --bs-card-bg: var(--app-surface);
