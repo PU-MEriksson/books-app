@@ -26,6 +26,16 @@
             Böcker
           </a>
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/quotes"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            Mina citat
+          </a>
+        </li>
       </ul>
 
       @if (isLoggedIn()) {

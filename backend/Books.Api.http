@@ -1,8 +1,9 @@
-@baseUrl = http://localhost:5220
+@baseUrl = https://books-api-a36f.onrender.com
 
 ### Get all books
 GET {{baseUrl}}/api/books
 Accept: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 ### Create a book
 POST {{baseUrl}}/api/books
@@ -81,8 +82,8 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "Malin",
-  "password": "secret123"
+  "username": "Mattias",
+  "password": "abc123"
 }
 
 ### Get books WITH token
