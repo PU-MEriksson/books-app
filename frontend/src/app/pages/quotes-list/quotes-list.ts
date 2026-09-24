@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { QuoteService } from '../../services/quote-service';
 import { Quote } from '../../models/quote';
-import { QuotesCard } from '../../components/quotes-card/quotes-card';
+import { QuoteCard } from '../../components/quote-card/quote-card';
 
 @Component({
   selector: 'app-quotes-list',
-  imports: [QuotesCard],
+  imports: [QuoteCard],
   templateUrl: './quotes-list.html',
   styleUrl: './quotes-list.css',
 })
