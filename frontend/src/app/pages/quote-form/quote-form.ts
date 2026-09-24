@@ -26,7 +26,8 @@ export class QuoteForm {
       return;
     }
 
-    const quote = this.form.getRawValue();
+    const { text, author } = this.form.getRawValue();
+    const quote = { text, author: author.trim() || null };
 
     const request: Observable<unknown> = this.quoteService.create(quote);
 
