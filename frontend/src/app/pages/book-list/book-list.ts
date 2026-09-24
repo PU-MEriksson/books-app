@@ -19,12 +19,12 @@ export class BookList implements OnInit {
   }
 
   deleteBook(book: Book) {
-    // Add bootstrap component for confirmation
+    // TODO: Add bootstrap component for confirmation
     if (!confirm(`Vill du radera "${book.title}"?`)) {
       return;
     }
 
-    // Add toast on success and a good looking error message
+    // TODO: Add toast on success and a good looking error message
     this.bookService.delete(book.id).subscribe({
       next: () => this.books.update((books) => books.filter((b) => b.id !== book.id)),
       error: () => alert('Kunde inte radera boken. Försök igen.'),
