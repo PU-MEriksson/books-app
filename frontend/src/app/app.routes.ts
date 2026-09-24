@@ -5,6 +5,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { QuotesList } from './pages/quotes-list/quotes-list';
 import { authGuard } from './guards/auth-guard';
+import { QuoteForm } from './pages/quote-form/quote-form';
 
 export const routes: Routes = [
   { path: '', component: BookList, canActivate: [authGuard] },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'books/new', component: BookForm, canActivate: [authGuard] },
   { path: 'books/edit/:id', component: BookForm, canActivate: [authGuard] },
+  { path: 'quotes/new', component: QuoteForm, canActivate: [authGuard] },
 ];

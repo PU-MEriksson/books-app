@@ -1,0 +1,29 @@
+<h1>Lägg till nytt citat</h1>
+
+<form class="quote-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-4">
+    <label for="title" class="form-label">Citat</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="text"
+      id="text"
+      placeholder="Skriv ditt citat här"
+    />
+  </div>
+  <div class="mb-4">
+    <label for="author" class="form-label">Författare</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="author"
+      id="author"
+      placeholder="t.ex Tolkien"
+    />
+    <p class="form-text">Lämna tomt vid okänd författare</p>
+  </div>
+  <div class="d-flex justify-content-end gap-2">
+    <a routerLink="/" class="btn btn-outline-secondary">Avbryt</a>
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Spara citat</button>
+  </div>
+</form>
