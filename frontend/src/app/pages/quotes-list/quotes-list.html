@@ -1,4 +1,6 @@
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+<div
+  class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 col-lg-8 mx-auto"
+>
   <header>
     <h1>Mina citat</h1>
   </header>
@@ -6,11 +8,12 @@
     <i class="fa-solid fa-plus"></i>
     Lägg till citat
   </a>
-  <div>
-    @for (quote of quotes(); track quote.id) {
-      <app-quote-card [quote]="quote" (delete)="deleteQuote($event)" />
-    } @empty {
-      <p>Lägg till citat med knappen ovan</p>
-    }
-  </div>
+</div>
+
+<div class="vstack gap-3 col-lg-8 mx-auto">
+  @for (quote of quotes(); track quote.id) {
+    <app-quote-card [quote]="quote" (delete)="deleteQuote($event)" />
+  } @empty {
+    <p>Lägg till citat med knappen ovan</p>
+  }
 </div>

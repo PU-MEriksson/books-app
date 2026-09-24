@@ -43,7 +43,7 @@ export class BookForm implements OnInit {
 
     const book = this.form.getRawValue();
 
-    const request: Observable<unknown> = this.bookId
+    const request: Observable<unknown> = this.isEditMode
       ? this.bookService.update(Number(this.bookId), book)
       : this.bookService.create(book);
 

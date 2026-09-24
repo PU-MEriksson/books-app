@@ -1,15 +1,15 @@
-<h1>Lägg till nytt citat</h1>
+<h1>{{ isEditMode ? 'Redigera citat' : 'Lägg till nytt citat' }}</h1>
 
 <form class="quote-form" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="mb-4">
-    <label for="title" class="form-label">Citat</label>
-    <input
-      type="text"
+    <label for="text" class="form-label">Citat</label>
+    <textarea
+      rows="3"
       class="form-control"
       formControlName="text"
       id="text"
       placeholder="Skriv ditt citat här"
-    />
+    ></textarea>
   </div>
   <div class="mb-4">
     <label for="author" class="form-label">Författare</label>
