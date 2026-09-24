@@ -1,4 +1,5 @@
-@baseUrl = https://books-api-a36f.onrender.com
+// @baseUrl = https://books-api-a36f.onrender.com
+@baseUrl = http://localhost:5220 
 
 ### Get all books
 GET {{baseUrl}}/api/books
@@ -72,8 +73,8 @@ POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "Mattias",
-  "password": "abc123"
+  "username": "Malin",
+  "password": "secret123"
 }
 
 ### Log in
@@ -82,10 +83,93 @@ POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "Mattias",
-  "password": "abc123"
+  "username": "Malin",
+  "password": "secret123"
 }
 
 ### Get books WITH token
 GET {{baseUrl}}/api/books
+Authorization: Bearer {{login.response.body.token}}
+
+# ---------- Quotes (run "Log in" first) ----------
+
+### Get all quotes WITHOUT token (should fail with 401)
+GET {{baseUrl}}/api/quotes
+
+### Get all quotes
+GET {{baseUrl}}/api/quotes
+Authorization: Bearer {{login.response.body.token}}
+
+### Get quote 1
+GET {{baseUrl}}/api/quotes/1
+Authorization: Bearer {{login.response.body.token}}
+
+### Get a quote that doesn't exist (should fail with 404)
+GET {{baseUrl}}/api/quotes/999
+Authorization: Bearer {{login.response.body.token}}
+
+### Create a quote
+# @name createQuote
+POST {{baseUrl}}/api/quotes
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "text": "Not all those who wander are lost.",
+  "author": "J.R.R. Tolkien"
+}
+
+### Create a quote WITHOUT an author (should succeed, author is optional)
+POST {{baseUrl}}/api/quotes
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "text": "A quote nobody knows who said."
+}
+
+### Create a quote WITHOUT text (should fail with 400)
+POST {{baseUrl}}/api/quotes
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "author": "Nobody"
+}
+
+### Update the quote created above
+PUT {{baseUrl}}/api/quotes/{{createQuote.response.body.id}}
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "text": "Not all those who wander are lost. (edited)",
+  "author": "J.R.R. Tolkien"
+}
+
+### Update a quote that doesn't exist (should fail with 404)
+PUT {{baseUrl}}/api/quotes/999
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "text": "Ghost quote"
+}
+
+### Update with EMPTY text (should fail with 400)
+PUT {{baseUrl}}/api/quotes/{{createQuote.response.body.id}}
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "text": "",
+  "author": "J.R.R. Tolkien"
+}
+
+### Delete the quote created above
+DELETE {{baseUrl}}/api/quotes/{{createQuote.response.body.id}}
+Authorization: Bearer {{login.response.body.token}}
+
+### Delete a quote that doesn't exist (should fail with 404)
+DELETE {{baseUrl}}/api/quotes/999
 Authorization: Bearer {{login.response.body.token}}
