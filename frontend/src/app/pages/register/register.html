@@ -1,39 +1,45 @@
-<div class="register-page">
-  <h1 class="mb-4"><i class="fa-solid fa-user-plus me-2"></i>Skapa konto</h1>
+<div class="card">
+  <div class="card-body d-flex flex-column">
+    <h1 class="card-title text-center">
+      <i class="fa-solid fa-book-open text-primary me-2"></i>Bokhyllan
+    </h1>
+    <p class="text-body-secondary text-center">Skapa ett konto för dina böcker och citat</p>
 
-  @if (errorMessage()) {
-    <div class="alert alert-danger" role="alert">
-      <i class="fa-solid fa-circle-exclamation me-2"></i>{{ errorMessage() }}
-    </div>
-  }
+    @if (errorMessage()) {
+      <div class="alert alert-danger" role="alert">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>{{ errorMessage() }}
+      </div>
+    }
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="mb-4">
-      <label for="username" class="form-label">Användarnamn</label>
-      <input
-        type="text"
-        class="form-control"
-        formControlName="username"
-        id="username"
-        autocomplete="username"
-      />
-      <div class="form-text">Minst 3 tecken.</div>
-    </div>
-    <div class="mb-4">
-      <label for="password" class="form-label">Lösenord</label>
-      <input
-        type="password"
-        class="form-control"
-        formControlName="password"
-        id="password"
-        autocomplete="new-password"
-      />
-      <div class="form-text">Minst 6 tecken.</div>
-    </div>
-    <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">
-      Skapa konto
-    </button>
-  </form>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-2">
+      <div>
+        <label for="username" class="form-label">Användarnamn</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="username"
+          id="username"
+          autocomplete="username"
+        />
+        <div class="form-text">Minst 3 tecken.</div>
+      </div>
+      <div>
+        <label for="password" class="form-label">Lösenord</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+          id="password"
+          autocomplete="new-password"
+        />
+        <div class="form-text">Minst 6 tecken.</div>
+      </div>
 
-  <p class="mt-4 text-center">Har du redan ett konto? <a routerLink="/login">Logga in</a></p>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        <i class="fa-solid fa-user-plus me-2"></i>
+        Skapa konto
+      </button>
+    </form>
+    <p class="mt-4 text-center">Har du redan ett konto? <a routerLink="/login">Logga in</a></p>
+  </div>
 </div>
