@@ -16,6 +16,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <button
+      type="button"
+      class="btn btn-outline-secondary rounded-circle theme-toggle d-flex align-items-center justify-content-center ms-auto ms-md-3 order-md-last"
+      (click)="toggleTheme()"
+      [attr.aria-label]="theme() === 'light' ? 'Byt till mörkt tema' : 'Byt till ljust tema'"
+      [title]="theme() === 'light' ? 'Byt till mörkt tema' : 'Byt till ljust tema'"
+    >
+      <i
+        class="fa-solid"
+        [class.fa-moon]="theme() === 'light'"
+        [class.fa-circle-half-stroke]="theme() === 'dark'"
+      ></i>
+    </button>
+
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto nav-underline">
         <li class="nav-item">
