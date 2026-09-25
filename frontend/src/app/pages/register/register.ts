@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -28,15 +29,19 @@ export class Register {
     }
 
     this.errorMessage.set(null);
+    const credentials = this.form.getRawValue();
 
-    this.authService.register(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(['/login']),
-      error: (error: HttpErrorResponse) =>
-        this.errorMessage.set(
-          error.status === 409
-            ? 'Användarnamnet är upptaget. Välj ett annat.'
-            : 'Kunde inte skapa kontot. Försök igen om en stund.',
-        ),
-    });
+    this.authService
+      .register(credentials)
+      .pipe(switchMap(() => this.authService.login(credentials)))
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: (error: HttpErrorResponse) =>
+          this.errorMessage.set(
+            error.status === 409
+              ? 'Användarnamnet är upptaget. Välj ett annat.'
+              : 'Kunde inte skapa kontot. Försök igen om en stund.',
+          ),
+      });
   }
 }
