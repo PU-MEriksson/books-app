@@ -1,7 +1,9 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
   <header>
     <h1>Mina böcker</h1>
-    <p class="text-body-secondary">{{ books().length }} böcker i din bokhylla</p>
+    @if (!loading) {
+      <p class="text-body-secondary">{{ books().length }} böcker i din bokhylla</p>
+    }
   </header>
   <a routerLink="/books/new" class="btn btn-primary">
     <i class="fa-solid fa-plus"></i>
@@ -9,10 +11,22 @@
   </a>
 </div>
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-1">
-  @for (book of books(); track book.id) {
-    <app-book-card [book]="book" (delete)="deleteBook($event)" />
-  } @empty {
-    <p>Lägg till böcker med knappen ovan</p>
-  }
-</div>
+@if (loading()) {
+  <div class="text-center py-5" role="status">
+    <span class="spinner-border text-primary" aria-hidden="true"></span>
+    <p class="text-body-secondary mt-3">Hämtar dina böcker…</p>
+  </div>
+} @else if (loadError()) {
+  <div class="alert alert-danger" role="alert">
+    <i class="fa-solid fa-circle-exclamation me-2"></i>Kunde inte hämta böckerna. Försök igen om en
+    stund.
+  </div>
+} @else {
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-1">
+    @for (book of books(); track book.id) {
+      <app-book-card [book]="book" (delete)="deleteBook($event)" />
+    } @empty {
+      <p>Lägg till böcker med knappen ovan</p>
+    }
+  </div>
+}

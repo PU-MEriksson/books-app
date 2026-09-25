@@ -3,6 +3,7 @@ import { BookService } from '../../services/book-service';
 import { Book } from '../../models/book';
 import { BookCard } from '../../components/book-card/book-card';
 import { RouterLink } from '@angular/router';
+import { filter, finalize } from 'rxjs';
 
 @Component({
   selector: 'app-book-list',
@@ -13,9 +14,17 @@ import { RouterLink } from '@angular/router';
 export class BookList implements OnInit {
   private bookService = inject(BookService);
   protected books = signal<Book[]>([]);
+  protected loading = signal(true);
+  protected loadError = signal(false);
 
   ngOnInit() {
-    this.bookService.getAll().subscribe((books) => this.books.set(books));
+    this.bookService
+      .getAll()
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (books) => this.books.set(books),
+        error: () => this.loadError.set(true),
+      });
   }
 
   deleteBook(book: Book) {
