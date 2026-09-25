@@ -1,10 +1,10 @@
 using Books.Api.Data;
 using Books.Api.Dtos;
 using Books.Api.Models;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Books.Api.Controllers;
 
@@ -24,7 +24,10 @@ public class BooksController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<BookResponse>>> GetBooks()
     {
+        var userId = GetCurrentUserId();
+
         return await _context.Books
+            .Where(b => b.UserId == userId)
             .Select(b => ToResponse(b))
             .ToListAsync();
     }
@@ -33,7 +36,8 @@ public class BooksController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<BookResponse>> GetBook(int id)
     {
-        var book = await _context.Books.FindAsync(id);
+        var userId = GetCurrentUserId();
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 
         if (book == null)
         {
@@ -52,6 +56,7 @@ public class BooksController : ControllerBase
             Title = request.Title,
             Author = request.Author,
             PublicationDate = request.PublicationDate,
+            UserId = GetCurrentUserId(),
         };
 
         _context.Books.Add(book);
@@ -61,9 +66,11 @@ public class BooksController : ControllerBase
     }
 
     // PUT: api/books/{id}
+    [HttpPut("{id}")]
     public async Task<IActionResult> UpdateBook(int id, BookRequest request)
     {
-        var book = await _context.Books.FindAsync(id);
+        var userId = GetCurrentUserId();
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 
         if (book == null)
         {
@@ -83,7 +90,8 @@ public class BooksController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(int id)
     {
-        var book = await _context.Books.FindAsync(id);
+        var userId = GetCurrentUserId();
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 
         if (book == null)
         {
@@ -96,6 +104,8 @@ public class BooksController : ControllerBase
         return NoContent();
     }
 
+    private int GetCurrentUserId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
     private static BookResponse ToResponse(Book book) => new()
     {
         Id = book.Id,
@@ -103,4 +113,5 @@ public class BooksController : ControllerBase
         Author = book.Author,
         PublicationDate = book.PublicationDate,
     };
+
 }

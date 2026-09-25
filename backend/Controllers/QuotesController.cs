@@ -4,6 +4,7 @@ using Books.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Books.Api.Controllers;
 
@@ -23,14 +24,17 @@ public class QuotesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<QuoteResponse>>> GetQuotes()
     {
-        return await _context.Quotes.Select(q => ToResponse(q)).ToListAsync();
+        var userId = GetCurrentUserId();
+
+        return await _context.Quotes.Where(q => q.UserId == userId).Select(q => ToResponse(q)).ToListAsync();
     }
 
     // GET: api/quotes/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<QuoteResponse>> GetQuote(int id)
     {
-        var quote = await _context.Quotes.FindAsync(id);
+        var userId = GetCurrentUserId();
+        var quote = await _context.Quotes.FirstOrDefaultAsync(q => q.Id == id && q.UserId == userId);
 
         if (quote == null)
         {
@@ -48,6 +52,7 @@ public class QuotesController : ControllerBase
         {
             Text = request.Text,
             Author = request.Author,
+            UserId = GetCurrentUserId(),
         };
 
         _context.Quotes.Add(quote);
@@ -60,7 +65,8 @@ public class QuotesController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateQuote(int id, QuoteRequest request)
     {
-        var quote = await _context.Quotes.FindAsync(id);
+        var userId = GetCurrentUserId();
+        var quote = await _context.Quotes.FirstOrDefaultAsync(q => q.Id == id && q.UserId == userId);
 
         if (quote == null)
         {
@@ -79,7 +85,8 @@ public class QuotesController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteQuote(int id)
     {
-        var quote = await _context.Quotes.FindAsync(id);
+        var userId = GetCurrentUserId();
+        var quote = await _context.Quotes.FirstOrDefaultAsync(q => q.Id == id && q.UserId == userId);
 
         if (quote == null)
         {
@@ -91,6 +98,8 @@ public class QuotesController : ControllerBase
 
         return NoContent();
     }
+
+    private int GetCurrentUserId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
     private static QuoteResponse ToResponse(Quote quote) => new()
     {

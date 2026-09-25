@@ -14,4 +14,7 @@ public class Book
 
     [Required]
     public DateOnly? PublicationDate { get; set; }
+
+    public int UserId { get; set; }
+    public User? User { get; set; }
 }
