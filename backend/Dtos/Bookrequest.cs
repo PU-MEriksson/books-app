@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace Books.Api.Dtos;
+
+
 public class BookRequest
 {
     [Required, StringLength(200)]

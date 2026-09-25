@@ -1,5 +1,5 @@
-using System.Diagnostics.Contracts;
 using Books.Api.Data;
+using Books.Api.Dtos;
 using Books.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +21,14 @@ public class QuotesController : ControllerBase
 
     // GET : api/quotes
     [HttpGet]
-    public async Task<ActionResult<List<Quote>>> GetQuotes()
+    public async Task<ActionResult<List<QuoteResponse>>> GetQuotes()
     {
-        return await _context.Quotes.ToListAsync();
+        return await _context.Quotes.Select(q => ToResponse(q)).ToListAsync();
     }
 
     // GET: api/quotes/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<Quote>> GetQuote(int id)
+    public async Task<ActionResult<QuoteResponse>> GetQuote(int id)
     {
         var quote = await _context.Quotes.FindAsync(id);
 
@@ -37,22 +37,28 @@ public class QuotesController : ControllerBase
             return NotFound();
         }
 
-        return quote;
+        return ToResponse(quote);
     }
 
     // POST: api/quotes
     [HttpPost]
-    public async Task<ActionResult<Quote>> CreateQuote(Quote quote)
+    public async Task<ActionResult<QuoteResponse>> CreateQuote(QuoteRequest request)
     {
+        var quote = new Quote
+        {
+            Text = request.Text,
+            Author = request.Author,
+        };
+
         _context.Quotes.Add(quote);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, quote);
+        return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, ToResponse(quote));
     }
 
     // PUT: api/quotes/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateQuote(int id, Quote updatedQuote)
+    public async Task<IActionResult> UpdateQuote(int id, QuoteRequest request)
     {
         var quote = await _context.Quotes.FindAsync(id);
 
@@ -61,8 +67,8 @@ public class QuotesController : ControllerBase
             return NotFound();
         }
 
-        quote.Text = updatedQuote.Text;
-        quote.Author = updatedQuote.Author;
+        quote.Text = request.Text;
+        quote.Author = request.Author;
 
         await _context.SaveChangesAsync();
 
@@ -85,4 +91,11 @@ public class QuotesController : ControllerBase
 
         return NoContent();
     }
+
+    private static QuoteResponse ToResponse(Quote quote) => new()
+    {
+        Id = quote.Id,
+        Text = quote.Text,
+        Author = quote.Author
+    };
 }

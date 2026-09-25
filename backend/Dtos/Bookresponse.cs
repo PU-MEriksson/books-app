@@ -1,3 +1,5 @@
+namespace Books.Api.Dtos;
+
 public class BookResponse
 {
     public int Id { get; set; }
