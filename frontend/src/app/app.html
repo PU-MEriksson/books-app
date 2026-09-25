@@ -1,17 +1,16 @@
 <nav class="navbar navbar-expand-md border-bottom">
   <div class="container">
     @if (isLoggedIn()) {
-      <a class="navbar-brand" routerLink="/">
+      <a class="navbar-brand" routerLink="/" (click)="closeMenu()">
         <i class="fa-solid fa-book-open me-2 text-primary"></i>Bokhyllan
       </a>
 
       <button
         class="navbar-toggler order-first me-2 ghost-btn"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#mainNav"
+        (click)="toggleMenu()"
         aria-controls="mainNav"
-        aria-expanded="false"
+        [attr.aria-expanded]="menuOpen()"
         aria-label="Växla navigering"
       >
         <span class="navbar-toggler-icon"></span>
@@ -33,7 +32,7 @@
     </button>
 
     @if (isLoggedIn()) {
-      <div class="collapse navbar-collapse" id="mainNav">
+      <div class="collapse navbar-collapse" id="mainNav" [class.show]="menuOpen()">
         <ul class="navbar-nav me-auto nav-underline">
           <li class="nav-item">
             <a
@@ -41,6 +40,7 @@
               routerLink="/"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"
+              (click)="closeMenu()"
             >
               Böcker
             </a>
@@ -51,6 +51,7 @@
               routerLink="/quotes"
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"
+              (click)="closeMenu()"
             >
               Mina citat
             </a>

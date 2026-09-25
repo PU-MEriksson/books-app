@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth-service';
 import { ThemeService } from './services/theme-service';
@@ -16,12 +16,22 @@ export class App {
 
   protected isLoggedIn = this.authService.isLoggedIn;
   protected theme = this.themeService.theme;
+  protected menuOpen = signal(false);
 
   protected toggleTheme() {
     this.themeService.toggle();
   }
 
+  protected toggleMenu() {
+    this.menuOpen.update((open) => !open);
+  }
+
+  protected closeMenu() {
+    this.menuOpen.set(false);
+  }
+
   protected onLogOut() {
+    this.closeMenu();
     this.authService.logout();
     this.router.navigate(['/login']);
   }
