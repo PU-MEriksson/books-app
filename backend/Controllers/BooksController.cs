@@ -1,5 +1,7 @@
 using Books.Api.Data;
+using Books.Api.Dtos;
 using Books.Api.Models;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,16 +20,18 @@ public class BooksController : ControllerBase
         _context = context;
     }
 
-    //GET: api/books
+    // GET: api/books
     [HttpGet]
-    public async Task<ActionResult<List<Book>>> GetBooks()
+    public async Task<ActionResult<List<BookResponse>>> GetBooks()
     {
-        return await _context.Books.ToListAsync();
+        return await _context.Books
+            .Select(b => ToResponse(b))
+            .ToListAsync();
     }
 
     // GET: api/books/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<Book>> GetBook(int id)
+    public async Task<ActionResult<BookResponse>> GetBook(int id)
     {
         var book = await _context.Books.FindAsync(id);
 
@@ -36,22 +40,28 @@ public class BooksController : ControllerBase
             return NotFound();
         }
 
-        return book;
+        return ToResponse(book);
     }
 
     // POST: api/books
     [HttpPost]
-    public async Task<ActionResult<Book>> CreateBook(Book book)
+    public async Task<ActionResult<BookResponse>> CreateBook(BookRequest request)
     {
+        var book = new Book
+        {
+            Title = request.Title,
+            Author = request.Author,
+            PublicationDate = request.PublicationDate,
+        };
+
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
+        return CreatedAtAction(nameof(GetBook), new { id = book.Id }, ToResponse(book));
     }
 
     // PUT: api/books/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateBook(int id, Book updatedBook)
+    public async Task<IActionResult> UpdateBook(int id, BookRequest request)
     {
         var book = await _context.Books.FindAsync(id);
 
@@ -60,9 +70,9 @@ public class BooksController : ControllerBase
             return NotFound();
         }
 
-        book.Title = updatedBook.Title;
-        book.Author = updatedBook.Author;
-        book.PublicationDate = updatedBook.PublicationDate;
+        book.Title = request.Title;
+        book.Author = request.Author;
+        book.PublicationDate = request.PublicationDate;
 
         await _context.SaveChangesAsync();
 
@@ -85,4 +95,12 @@ public class BooksController : ControllerBase
 
         return NoContent();
     }
+
+    private static BookResponse ToResponse(Book book) => new()
+    {
+        Id = book.Id,
+        Title = book.Title,
+        Author = book.Author,
+        PublicationDate = book.PublicationDate,
+    };
 }
