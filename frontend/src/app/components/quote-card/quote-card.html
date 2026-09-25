@@ -1,20 +1,27 @@
 <div class="card">
-  <div class="card-body">
-    <blockquote class="blockquote">
-      <p>{{ quote().text }}</p>
-      <footer class="blockquote-footer">
-        {{ quote().author ?? 'Okänd' }}
-      </footer>
-    </blockquote>
-    <div class="d-flex gap-2">
-      <a [routerLink]="['/quotes/edit', quote().id]" class="btn btn-outline-secondary">
-        <i class="fa-solid fa-pen"></i>
-        Redigera
-      </a>
-      <button type="button" class="btn btn-outline-danger" (click)="delete.emit(quote())">
-        <i class="fa-solid fa-trash-can"></i>
-        Radera
-      </button>
+  <div class="card-body d-flex gap-3 align-items-start">
+    <i class="fa-solid fa-quote-left quote-mark text-primary mt-1" aria-hidden="true"></i>
+    <div class="flex-grow-1">
+      <blockquote class="blockquote">
+        <p class="mb-4">{{ quote().text }}</p>
+        <footer class="blockquote-footer text-body-secondary">
+          {{ quote().author ?? 'Okänd' }}
+        </footer>
+      </blockquote>
+      <div class="d-flex gap-2">
+        <a [routerLink]="['/quotes/edit', quote().id]" class="btn btn-outline-secondary btn-sm">
+          <i class="fa-solid fa-pen"></i>
+          Redigera
+        </a>
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm btn-ghost"
+          (click)="delete.emit(quote())"
+        >
+          <i class="fa-solid fa-trash-can"></i>
+          Radera
+        </button>
+      </div>
     </div>
   </div>
 </div>
