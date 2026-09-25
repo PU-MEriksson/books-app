@@ -1,0 +1,16 @@
+.empty-state {
+  border: 1px dashed var(--app-border);
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.empty-state-icon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--app-accent);
+  background-color: rgba(var(--app-accent-rgb), 0.12);
+}

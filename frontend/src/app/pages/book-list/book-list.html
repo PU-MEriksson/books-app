@@ -21,12 +21,20 @@
     <i class="fa-solid fa-circle-exclamation me-2"></i>Kunde inte hämta böckerna. Försök igen om en
     stund.
   </div>
+} @else if (books().length === 0) {
+  <app-empty-state
+    icon="fa-book"
+    title="Din bokhylla är tom"
+    message="Lägg till din första bok så dyker den upp här."
+  >
+    <a routerLink="/books/new" class="btn btn-link">
+      <i class="fa-solid fa-plus me-2"></i>Lägg till bok
+    </a>
+  </app-empty-state>
 } @else {
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-1">
     @for (book of books(); track book.id) {
       <app-book-card [book]="book" (delete)="deleteBook($event)" />
-    } @empty {
-      <p>Lägg till böcker med knappen ovan</p>
     }
   </div>
 }

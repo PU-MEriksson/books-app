@@ -2,12 +2,13 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { BookService } from '../../services/book-service';
 import { Book } from '../../models/book';
 import { BookCard } from '../../components/book-card/book-card';
+import { EmptyState } from '../../components/empty-state/empty-state';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-book-list',
-  imports: [BookCard, RouterLink],
+  imports: [BookCard, RouterLink, EmptyState],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
 })

@@ -28,7 +28,15 @@
     @for (quote of quotes(); track quote.id) {
       <app-quote-card [quote]="quote" (delete)="deleteQuote($event)" />
     } @empty {
-      <p>Lägg till citat med knappen ovan</p>
+      <app-empty-state
+        icon="fa-quote-left"
+        title="Inga citat än"
+        message="Spara citat du tycker om så samlas de här."
+      >
+        <a routerLink="/quotes/new" class="btn btn-link">
+          <i class="fa-solid fa-plus me-2"></i>Lägg till citat
+        </a>
+      </app-empty-state>
     }
   }
 </div>
