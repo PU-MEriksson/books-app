@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
-import { switchMap } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +17,7 @@ export class Register {
   private fb = inject(FormBuilder);
 
   protected errorMessage = signal<string | null>(null);
+  protected loading = signal<boolean>(false);
 
   protected form = this.fb.nonNullable.group({
     username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -24,16 +25,20 @@ export class Register {
   });
 
   protected onSubmit() {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.loading()) {
       return;
     }
 
     this.errorMessage.set(null);
+    this.loading.set(true);
     const credentials = this.form.getRawValue();
 
     this.authService
       .register(credentials)
-      .pipe(switchMap(() => this.authService.login(credentials)))
+      .pipe(
+        switchMap(() => this.authService.login(credentials)),
+        finalize(() => this.loading.set(false)),
+      )
       .subscribe({
         next: () => this.router.navigate(['/']),
         error: (error: HttpErrorResponse) =>

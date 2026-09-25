@@ -33,10 +33,21 @@
         />
       </div>
 
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-        <i class="fa-solid fa-right-to-bracket me-2"> </i>
-        Logga in
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading()">
+        @if (loading()) {
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          Loggar in…
+        } @else {
+          <i class="fa-solid fa-right-to-bracket me-2"> </i>
+          Logga in
+        }
       </button>
+
+      @if (loading()) {
+        <p class="form-text text-center mb-0" role="status">
+          Första inloggningen kan ta upp till en minut medan servern startar.
+        </p>
+      }
     </form>
     <p class="mt-4 text-center">Inget konto än? <a routerLink="/register">Registrera dig</a></p>
   </div>

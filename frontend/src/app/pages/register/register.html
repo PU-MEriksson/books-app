@@ -35,10 +35,21 @@
         <div class="form-text">Minst 6 tecken.</div>
       </div>
 
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
-        <i class="fa-solid fa-user-plus me-2"></i>
-        Skapa konto
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading()">
+        @if (loading()) {
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          Skapar konto…
+        } @else {
+          <i class="fa-solid fa-user-plus me-2"></i>
+          Skapa konto
+        }
       </button>
+
+      @if (loading()) {
+        <p class="form-text text-center mb-0" role="status">
+          Första gången kan det ta upp till en minut medan servern startar.
+        </p>
+      }
     </form>
     <p class="mt-4 text-center">Har du redan ett konto? <a routerLink="/login">Logga in</a></p>
   </div>
