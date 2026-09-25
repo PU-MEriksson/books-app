@@ -109,12 +109,38 @@ h6,
 
 /* No underline below md, where the menu collapses (navbar-expand-md) */
 @media (max-width: 767.98px) {
+  .navbar-collapse .nav-link:hover,
+  .navbar-collapse .nav-link.active {
+    background-color: rgba(var(--app-accent-rgb), 0.08);
+  }
+
+  .navbar-collapse {
+    margin-top: 12px;
+  }
+
   .nav-underline {
     gap: 0;
   }
 
   .nav-underline .nav-link {
     border-bottom: 0;
+  }
+
+  /* Left border marks the current page */
+  .navbar-collapse .nav-link {
+    padding: 0.75rem 1rem;
+    border-left: 3px solid transparent;
+  }
+
+  .navbar-collapse .nav-link.active {
+    border-left-color: var(--app-accent);
+  }
+
+  /* Divider between the page links and "Logga ut" */
+  .navbar-collapse .navbar-nav + .navbar-nav {
+    border-top: 1px solid var(--app-border);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
   }
 }
 

@@ -4,22 +4,12 @@
       <a class="navbar-brand" routerLink="/" (click)="closeMenu()">
         <i class="fa-solid fa-book-open me-2 text-primary"></i>Bokhyllan
       </a>
-
-      <button
-        class="navbar-toggler order-first me-2 ghost-btn"
-        type="button"
-        (click)="toggleMenu()"
-        aria-controls="mainNav"
-        [attr.aria-expanded]="menuOpen()"
-        aria-label="Växla navigering"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
     }
 
     <button
       type="button"
-      class="btn btn-outline-secondary rounded-circle theme-toggle d-flex align-items-center justify-content-center ms-auto ms-md-3 order-md-last"
+      class="btn btn-outline-secondary rounded-circle theme-toggle d-flex align-items-center justify-content-center ms-auto order-md-last"
+      [class.ms-md-3]="isLoggedIn()"
       (click)="toggleTheme()"
       [attr.aria-label]="theme() === 'light' ? 'Byt till mörkt tema' : 'Byt till ljust tema'"
       [title]="theme() === 'light' ? 'Byt till mörkt tema' : 'Byt till ljust tema'"
@@ -32,6 +22,17 @@
     </button>
 
     @if (isLoggedIn()) {
+      <button
+        class="navbar-toggler ms-2 ghost-btn"
+        type="button"
+        (click)="toggleMenu()"
+        aria-controls="mainNav"
+        [attr.aria-expanded]="menuOpen()"
+        aria-label="Växla navigering"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
       <div class="collapse navbar-collapse" id="mainNav" [class.show]="menuOpen()">
         <ul class="navbar-nav me-auto nav-underline">
           <li class="nav-item">
