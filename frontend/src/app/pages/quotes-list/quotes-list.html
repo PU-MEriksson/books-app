@@ -3,7 +3,9 @@
 >
   <header>
     <h1>Mina citat</h1>
-    <p class="text-body-secondary">{{ quotes().length }} sparade citat</p>
+    @if (!loading()) {
+      <p class="text-body-secondary">{{ quotes().length }} sparade citat</p>
+    }
   </header>
   <a routerLink="/quotes/new" class="btn btn-primary">
     <i class="fa-solid fa-plus"></i>
@@ -12,9 +14,21 @@
 </div>
 
 <div class="vstack gap-3 col-lg-8 mx-auto">
-  @for (quote of quotes(); track quote.id) {
-    <app-quote-card [quote]="quote" (delete)="deleteQuote($event)" />
-  } @empty {
-    <p>Lägg till citat med knappen ovan</p>
+  @if (loading()) {
+    <div class="text-center py-5" role="status">
+      <span class="spinner-border text-primary" aria-hidden="true"></span>
+      <p class="text-body-secondary mt-3">Hämtar dina citat…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>Kunde inte hämta citaten. Försök igen om en
+      stund.
+    </div>
+  } @else {
+    @for (quote of quotes(); track quote.id) {
+      <app-quote-card [quote]="quote" (delete)="deleteQuote($event)" />
+    } @empty {
+      <p>Lägg till citat med knappen ovan</p>
+    }
   }
 </div>

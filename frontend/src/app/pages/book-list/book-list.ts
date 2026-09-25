@@ -3,7 +3,7 @@ import { BookService } from '../../services/book-service';
 import { Book } from '../../models/book';
 import { BookCard } from '../../components/book-card/book-card';
 import { RouterLink } from '@angular/router';
-import { filter, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-book-list',
