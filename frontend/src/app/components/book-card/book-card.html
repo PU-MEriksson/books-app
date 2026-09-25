@@ -2,13 +2,20 @@
   <div class="card-body">
     <h5 class="card-title">{{ book().title }}</h5>
     <p class="card-text text-body-secondary">{{ book().author }}</p>
-    <p class="card-text text-body-secondary">{{ book().publicationDate }}</p>
+    <p class="card-text text-body-secondary">Utgiven {{ book().publicationDate | date: 'y' }}</p>
     <div class="d-flex gap-2">
-      <a [routerLink]="['/books/edit', book().id]" class="btn btn-outline-secondary">
+      <a
+        [routerLink]="['/books/edit', book().id]"
+        class="btn btn-outline-secondary btn-sm flex-grow-1"
+      >
         <i class="fa-solid fa-pen"></i>
         Redigera
       </a>
-      <button type="button" class="btn btn-outline-danger" (click)="delete.emit(book())">
+      <button
+        type="button"
+        class="btn btn-outline-danger btn-sm btn-ghost"
+        (click)="delete.emit(book())"
+      >
         <i class="fa-solid fa-trash-can"></i>
         Radera
       </button>

@@ -192,3 +192,13 @@ h6,
   --bs-btn-disabled-border-color: var(--app-btn);
   --bs-btn-focus-shadow-rgb: var(--app-btn-rgb);
 }
+
+.btn-outline-secondary {
+  --bs-btn-border-color: var(--app-border);
+  --bs-btn-disabled-border-color: var(--app-border);
+}
+
+.btn-ghost {
+  --bs-btn-border-color: transparent;
+  --bs-btn-disabled-border-color: transparent;
+}
